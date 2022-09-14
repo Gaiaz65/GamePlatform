@@ -7,21 +7,21 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  showAlert = true
+  showAlert = false
   alertMsg='Wait a second! Precessing...'
   alertColor = 'blue'
 
 
   name = new FormControl('', [Validators.required, Validators.minLength(6)]);
   email = new FormControl('', [Validators.required, Validators.email]);
+  password = new FormControl('', [
+    Validators.required,
+    Validators.pattern(/^[a-zA-Z0-9!@#\$%\^\&*_=+-]{8,12}$/g),
+  ]);
   age = new FormControl('', [
     Validators.required,
     Validators.min(18),
     Validators.max(100),
-  ]);
-  password = new FormControl('', [
-    Validators.required,
-    Validators.pattern(/^[a-zA-Z0-9!@#\$%\^\&*_=+-]{8,12}$/g),
   ]);
   confirm_password = new FormControl('', [Validators.required]);
   phoneNumber = new FormControl('', [
