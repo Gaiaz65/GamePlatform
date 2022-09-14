@@ -4,32 +4,33 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import IUser from '../model/user.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { delay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private usersCollection: AngularFirestoreCollection <IUser>
-  public isAuth$: Observable<boolean>
+  private usersCollection: AngularFirestoreCollection<IUser>;
+  public isAuth$: Observable<boolean>;
+  public isAuthWithDelay$: Observable<boolean>;
 
   constructor(private auth: AngularFireAuth, private db: AngularFirestore) {
-    this.usersCollection = db.collection('users')
-    this.isAuth$ = auth.user.pipe(
-      map(user=>!!user)
+    this.usersCollection = db.collection('users');
+    this.isAuth$ = auth.user.pipe(map((user) => !!user));
+    this.isAuthWithDelay$ = this.isAuth$.pipe(
+      delay(1500)
     )
   }
 
-
-  public async createUser(userData:IUser) {
+  public async createUser(userData: IUser) {
     const userCred = await this.auth.createUserWithEmailAndPassword(
       userData.email as string,
       userData.password as string
     );
 
-  if(!userCred.user){
-    throw new Error ('User can not be found')
-  }
-
+    if (!userCred.user) {
+      throw new Error('User can not be found');
+    }
 
     this.usersCollection.doc(userCred.user.uid).set({
       name: userData.name,
@@ -39,7 +40,7 @@ export class AuthService {
     });
 
     await userCred.user.updateProfile({
-      displayName:userData.name
-    })
+      displayName: userData.name,
+    });
   }
 }

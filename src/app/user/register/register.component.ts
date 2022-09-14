@@ -1,6 +1,7 @@
 import { AuthService } from './../../services/auth.service';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { RegisterValidators } from '../validators/register-validators';
 
 @Component({
   selector: 'app-register',
@@ -8,16 +9,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  constructor(
-    private authService:AuthService
-  ) {
-
-  }
-  showAlert = false
-  alertMsg='Wait a second! Precessing...'
-  alertColor = 'blue'
-  loading = false
-
+  constructor(private authService: AuthService) {}
+  showAlert = false;
+  alertMsg = 'Wait a second! Precessing...';
+  alertColor = 'blue';
+  loading = false;
 
   name = new FormControl('', [Validators.required, Validators.minLength(6)]);
   email = new FormControl('', [Validators.required, Validators.email]);
@@ -36,32 +32,35 @@ export class RegisterComponent {
     Validators.maxLength(15),
   ]);
 
-  registerForm = new FormGroup({
-    name: this.name,
-    email: this.email,
-    age: this.age,
-    password: this.password,
-    confirm_password: this.confirm_password,
-    phoneNumber: this.phoneNumber,
-  });
+  registerForm = new FormGroup(
+    {
+      name: this.name,
+      email: this.email,
+      age: this.age,
+      password: this.password,
+      confirm_password: this.confirm_password,
+      phoneNumber: this.phoneNumber,
+    },
+    [RegisterValidators.match('password', 'confirm_password')]
+  );
 
   async register() {
-    this.showAlert = true
-    this.alertMsg = 'Wait a second! Precessing...'
-    this.alertColor = 'blue'
-    this.loading = true
+    this.showAlert = true;
+    this.alertMsg = 'Wait a second! Precessing...';
+    this.alertColor = 'blue';
+    this.loading = true;
 
-    try{
-     await this.authService.createUser(this.registerForm.value)
-  } catch (e) {
-    console.error(e)
-    this.alertMsg= 'Unexpected error'
-    this.alertColor = 'red'
+    try {
+      await this.authService.createUser(this.registerForm.value);
+    } catch (e) {
+      console.error(e);
+      this.alertMsg = 'Unexpected error';
+      this.alertColor = 'red';
+      this.loading = false;
+      return;
+    }
+    this.alertMsg = 'your account has been created!';
+    this.alertColor = 'green';
     this.loading = false;
-    return
   }
-  this.alertMsg = 'your account has been created!'
-  this.alertColor = 'green';
-  this.loading = false;
-}
 }

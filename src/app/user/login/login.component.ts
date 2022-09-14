@@ -1,3 +1,4 @@
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -7,7 +8,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  showAlert = false;
+  showAlert = false
+  inSubmission = false
   alertMsg = ''
   alertColor=''
 
@@ -22,13 +24,35 @@ export class LoginComponent implements OnInit {
     password: this.password,
   });
 
-  constructor() {}
+  constructor(
+    private auth: AngularFireAuth
+  ) {}
 
   ngOnInit(): void {}
 
-  login() {
-    this.showAlert = true;
-    this.alertMsg = 'Wait a second! Precessing...';
-    this.alertColor = 'blue';
+  async login() {
+    this.showAlert = true
+    this.alertMsg = 'Wait a second! Precessing...'
+    this.alertColor = 'blue'
+    this.inSubmission = true
+
+
+    try {
+     await this.auth.signInWithEmailAndPassword(
+        this.loginForm.value.email,
+        this.loginForm.value.password
+      );
+      this.showAlert = false;
+    } catch (err) {
+
+      this.alertMsg = 'An error occured! Try again later...';
+      this.inSubmission = false;
+      this.alertColor = 'red';
+
+      return
+    }
+    this.alertMsg = 'You are in!';
+    this.inSubmission = false;
+    this.alertColor = 'green';
   }
 }

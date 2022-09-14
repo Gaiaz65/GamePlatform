@@ -252,4 +252,4 @@
 </section>
 
 <!-- Auth Modal -->
-<app-auth-modal></app-auth-modal>
+<app-auth-modal *ngIf="!(authService.isAuthWithDelay$ | async)"></app-auth-modal>

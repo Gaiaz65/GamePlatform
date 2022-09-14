@@ -1,3 +1,4 @@
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from './../services/auth.service';
 import { ModalService } from './../services/modal.service';
 import { Component, OnInit } from '@angular/core';
@@ -8,18 +9,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnInit {
-  isAuth = false
-  constructor(public modal: ModalService,
-    private authService:AuthService) {
-      this.authService.isAuth$.subscribe( status => {
-        this.isAuth = status
-      })
-    }
+  constructor(public modal: ModalService, public authService: AuthService, private afAuth: AngularFireAuth) {}
 
   ngOnInit(): void {}
 
-  openModal($event : Event) {
+  openModal($event: Event) {
     $event.preventDefault();
-    this.modal.toogleModal('auth')
+    this.modal.toogleModal('auth');
+  }
+
+ async logout(event:Event) {
+    event.preventDefault();
+    await this.afAuth.signOut()
   }
 }
