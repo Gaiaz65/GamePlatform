@@ -1,3 +1,4 @@
+import { AuthService } from './../services/auth.service';
 import { ModalService } from './../services/modal.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnInit {
-  constructor(public modal: ModalService) {}
+  isAuth = false
+  constructor(public modal: ModalService,
+    private authService:AuthService) {
+      this.authService.isAuth$.subscribe( status => {
+        this.isAuth = status
+      })
+    }
 
   ngOnInit(): void {}
 

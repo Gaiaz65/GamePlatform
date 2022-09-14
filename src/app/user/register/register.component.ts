@@ -1,5 +1,4 @@
-import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthService } from './../../services/auth.service';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -10,9 +9,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class RegisterComponent {
   constructor(
-    private auth:AngularFireAuth,
-    private dB: AngularFirestore
-  ){}
+    private authService:AuthService
+  ) {
+
+  }
   showAlert = false
   alertMsg='Wait a second! Precessing...'
   alertColor = 'blue'
@@ -25,15 +25,15 @@ export class RegisterComponent {
     Validators.required,
     Validators.pattern(/^[a-zA-Z0-9!@#\$%\^\&*_=+-]{8,12}$/g),
   ]);
-  age = new FormControl('', [
+  age = new FormControl(null, [
     Validators.required,
     Validators.min(18),
     Validators.max(100),
   ]);
   confirm_password = new FormControl('', [Validators.required]);
   phoneNumber = new FormControl('', [
-    Validators.minLength(13),
-    Validators.maxLength(13),
+    Validators.minLength(15),
+    Validators.maxLength(15),
   ]);
 
   registerForm = new FormGroup({
@@ -51,19 +51,8 @@ export class RegisterComponent {
     this.alertColor = 'blue'
     this.loading = true
 
-
-    const { email, password } = this.registerForm.value
     try{
-    const userCred = await this.auth.createUserWithEmailAndPassword(
-      email as string,
-      password as string
-    );
-      this.dB.collection('userData').add({
-        namd: this.name.value,
-        email: this.email.value,
-        age: this.age.value,
-        phoneNumber: this.phoneNumber.value,
-      });
+     await this.authService.createUser(this.registerForm.value)
   } catch (e) {
     console.error(e)
     this.alertMsg= 'Unexpected error'
