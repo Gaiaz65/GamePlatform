@@ -1,3 +1,5 @@
+import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -7,9 +9,14 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+  constructor(
+    private auth:AngularFireAuth,
+    private dB: AngularFirestore
+  ){}
   showAlert = false
   alertMsg='Wait a second! Precessing...'
   alertColor = 'blue'
+  loading = false
 
 
   name = new FormControl('', [Validators.required, Validators.minLength(6)]);
@@ -38,9 +45,34 @@ export class RegisterComponent {
     phoneNumber: this.phoneNumber,
   });
 
-  register() {
+  async register() {
     this.showAlert = true
     this.alertMsg = 'Wait a second! Precessing...'
     this.alertColor = 'blue'
+    this.loading = true
+
+
+    const { email, password } = this.registerForm.value
+    try{
+    const userCred = await this.auth.createUserWithEmailAndPassword(
+      email as string,
+      password as string
+    );
+      this.dB.collection('userData').add({
+        namd: this.name.value,
+        email: this.email.value,
+        age: this.age.value,
+        phoneNumber: this.phoneNumber.value,
+      });
+  } catch (e) {
+    console.error(e)
+    this.alertMsg= 'Unexpected error'
+    this.alertColor = 'red'
+    this.loading = false;
+    return
   }
+  this.alertMsg = 'your account has been created!'
+  this.alertColor = 'green';
+  this.loading = false;
+}
 }
