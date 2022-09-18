@@ -11,7 +11,6 @@ export class EventBlockerDirective {
   @HostListener('dragover', ['$event'])
   public handleEvent(event: Event) {
     event.preventDefault();
-    console.log('prevented');
 
   }
 }

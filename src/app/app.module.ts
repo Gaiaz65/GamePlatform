@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {AngularFireModule} from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+;
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 
 import { ModalService } from './services/modal.service';
@@ -18,7 +20,14 @@ import { ClipComponent } from './clip/clip.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
-  declarations: [AppComponent, NavigationComponent, HomeComponent, AboutComponent, ClipComponent, NotFoundComponent],
+  declarations: [
+    AppComponent,
+    NavigationComponent,
+    HomeComponent,
+    AboutComponent,
+    ClipComponent,
+    NotFoundComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,7 +35,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    VideoModule
+    AngularFireStorageModule,
+    VideoModule,
   ],
   providers: [ModalService],
   bootstrap: [AppComponent],
