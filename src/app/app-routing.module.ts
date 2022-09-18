@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'clip/:id', component: ClipComponent },
-  { path: '**', component: NotFoundComponent },
+  // { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({

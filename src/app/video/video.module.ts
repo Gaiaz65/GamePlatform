@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -7,13 +8,7 @@ import { UploadComponent } from './upload/upload.component';
 
 
 @NgModule({
-  declarations: [
-    ManageComponent,
-    UploadComponent
-  ],
-  imports: [
-    CommonModule,
-    VideoRoutingModule
-  ]
+  declarations: [ManageComponent, UploadComponent],
+  imports: [CommonModule, VideoRoutingModule, SharedModule],
 })
-export class VideoModule { }
+export class VideoModule {}
