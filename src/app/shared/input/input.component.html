@@ -12,12 +12,12 @@
     </p>
     <p *ngIf="control.errors?.['minlength'] "
       class="text-red-400">
-      The password should be at least 6 letters long.
+      The value should be at least 6 letters long.
     </p>
 
     <p *ngIf="control.errors?.['required'] "
       class="text-red-400">
-      Please, type the password
+      This field is not supposed to be empty!
     </p>
 
       <p *ngIf="control.errors?.['email'] " class="text-red-400">
