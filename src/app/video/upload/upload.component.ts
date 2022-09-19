@@ -1,14 +1,16 @@
+import { FfmpegService } from './../../services/ffmpeg.service';
 import { Router } from '@angular/router';
 import { ClipService } from './../../services/clip.service';
 
 import { Component, OnDestroy } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
 import { FormControl,FormGroup,Validators } from '@angular/forms';
-import { last, switchMap } from 'rxjs';
+import {  switchMap, combineLatest } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
-import { async } from 'rxjs';
+import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'app-upload',
@@ -28,6 +30,9 @@ export class UploadComponent implements OnDestroy {
   inSubmission = false;
   progress = 0;
   task?: AngularFireUploadTask
+  screenshots:string[]=[]
+  selectedScreenshot=''
+  screenshotTask?: AngularFireUploadTask
 
   title = new FormControl('', {
     validators: [Validators.required, Validators.minLength(3)],
@@ -40,16 +45,22 @@ export class UploadComponent implements OnDestroy {
     private storage: AngularFireStorage,
     private auth: AngularFireAuth,
     private clipService: ClipService,
-    private router: Router
+    private router: Router,
+    public ffmpegService:FfmpegService
   ) {
-    auth.user.subscribe((user) => (this.user = user));
+    auth.user.subscribe((user) => (this.user = user))
+    this.ffmpegService.init()
   }
 
   ngOnDestroy(): void {
   this.task?.cancel()
   }
 
-  storeFile(event: Event) {
+  async storeFile(event: Event) {
+    if(this.ffmpegService.isRunning){
+      return
+    }
+
     this.isDragover = false;
     this.file = (event as DragEvent).dataTransfer
       ? (event as DragEvent).dataTransfer?.files.item(0) ?? null
@@ -58,11 +69,16 @@ export class UploadComponent implements OnDestroy {
     if (!this.file || this.file.type !== 'video/mp4') {
       return;
     }
+
+    this.screenshots = await this.ffmpegService.getScreenshots(this.file)
+
+    this.selectedScreenshot = this.screenshots[0]
+
     this.title.setValue(this.file.name.replace(/\.[^/.]+$/, ''));
     this.loadingVideo = true;
   }
 
-  uploadFile() {
+  async uploadFile() {
     this.uploadFormular.disable();
 
     this.showAlert = true;
@@ -74,28 +90,53 @@ export class UploadComponent implements OnDestroy {
     const clipFileName = uuid();
     const clipPath = `clips/${clipFileName}.mp4`;
 
+    const screenshotBlob = await this.ffmpegService.blobFromURL(
+      this.selectedScreenshot
+    )
+
+
+
+
+    const screenshotPath = `screenshots/${clipFileName}.png`
+
+    this.screenshotTask=this.storage.upload(screenshotPath, screenshotBlob);
     this.task = this.storage.upload(clipPath, this.file);
     const clipRef = this.storage.ref(clipPath);
 
-    this.task.percentageChanges().subscribe((progress) => {
-      this.progress = (progress as number) / 100;
+    const screenshotRef = this.storage.ref(screenshotPath)
+
+
+    combineLatest([this.task.percentageChanges(), this.screenshotTask.percentageChanges()]).subscribe((progress) => {
+      const [clipProgress, screenshotProgress] = progress
+
+      if (!screenshotProgress || !screenshotProgress) {
+        return
+      }
+
+      const total = screenshotProgress + screenshotProgress;
+        this.progress = total as number / 200;
     });
 
-    this.task
-      .snapshotChanges()
+    forkJoin([this.task.snapshotChanges(),
+    this.screenshotTask.snapshotChanges() ])
       .pipe(
-        last(),
-        switchMap(() => clipRef.getDownloadURL())
+        switchMap(() => forkJoin([
+          clipRef.getDownloadURL(),
+        screenshotRef.getDownloadURL()]))
       )
       .subscribe({
-        next: async (url) => {
+        next: async (urls) => {
+          const [clipURL, screenshotURL] = urls
+
           const clip = {
             uid: this.user?.uid as string,
             displayName: this.user?.displayName as string,
             title: this.title.value,
             fileName: `clips/${clipFileName}.mp4`,
-            url,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            url: clipURL,
+            screenshotURL,
+            screenshotFileName:`${clipFileName}.png`,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           };
 
           const clipDocRef =  await this.clipService.createClip(clip);
