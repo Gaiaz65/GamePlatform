@@ -6,7 +6,7 @@
 
 
       <span *ngIf="!ffmpegService.isReady; else uploadEditor"
-       class="material-icons text-center text-6xl p-8 animate-bounce">
+       class="material-icons text-center text-red-400 text-6xl p-8 animate-bounce">
         circle
       </span>
     </ng-container>
@@ -22,15 +22,15 @@
         (dragenter)="isDragover=true"
         (dragleave)="isDragover=false"
         (drop)="storeFile($event)"
-        [ngClass]="{'bg-indigo-400 border-indigo-400 border-solid': isDragover}"
+        [ngClass]="{'bg-red-400 border-red-400 border-solid': isDragover}"
         class="w-full px-10 py-40 rounded text-center cursor-pointer border border-dashed
               border-gray-400 transition duration-500 hover:text-white
-              hover:bg-indigo-400 hover:border-indigo-400 hover:border-solid text-xl">
-          <h5>Drop your file here (mp4 only!)</h5>
+              hover:bg-red-400 hover:border-red-400 hover:border-solid text-xl">
+          <h5 *ngIf="!ffmpegService.isRunning">Drop your file here (mp4 only!)</h5>
           <span *ngIf="ffmpegService.isRunning"
           class="material-icons text-center text-6xl p-8 animate-spin">autorenew</span>
         </div>
-        <input type="file" class="mt-4  bg-indigo-400 hover:border-indigo-400" (change)="storeFile($event)">
+        <input type="file" class="mt-4 hover:border-red-400" (change)="storeFile($event)">
       </ng-container>
 
 
@@ -48,7 +48,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div *ngFor="let screenshot of screenshots"
             [ngClass]="{
-              'border-green-400': screenshot === selectedScreenshot,
+              'border-red-400': screenshot === selectedScreenshot,
             'border-transparent': screenshot !== selectedScreenshot}"
             class="border-8 cursor-pointer"  (click)="selectedScreenshot = screenshot">
               <img [src]="screenshot | safeURL">
@@ -68,10 +68,10 @@
             <button
               [ngClass]="{
                 'opacity-50': inSubmission,
-                'hover:bg-indigo-700': !inSubmission}"
+                'hover:bg-red-800': !inSubmission}"
               [disabled]="inSubmission"
               type="submit"
-              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 focus:outline-none"
+              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-red-600 focus:outline-none"
               >
               Publish
             </button>

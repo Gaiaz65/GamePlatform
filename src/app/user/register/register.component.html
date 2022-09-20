@@ -34,7 +34,7 @@
     <label class="inline-block mb-2">Phone Number</label>
     <app-input [control]="phoneNumber" placeholder="Enter Phone Number" format="+0(000)000-0000"></app-input>
   </div>
-  <button [disabled]="registerForm.invalid || loading" type="submit" class="block w-full bg-indigo-400 text-white py-1.5 px-3 rounded transition hover:bg-indigo-500 disabled:opacity-50 disabled:bg-indigo-400">
+  <button [disabled]="registerForm.invalid || loading" type="submit" class="block w-full bg-red-400 text-white py-1.5 px-3 rounded transition hover:bg-red-500 disabled:opacity-50 disabled:bg-red-400">
     Submit
   </button>
 </form>

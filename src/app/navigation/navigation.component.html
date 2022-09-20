@@ -1,21 +1,21 @@
 <header id="header" class="bg-secondary">
   <nav class="container mx-auto flex justify-start items-center py-8 px-4">
-    <a class="text-3xl text-indigo-400 font-bold uppercase mr-4" routerLink="/" >Clip</a>
+    <a class="text-3xl text-red-400 font-bold uppercase mr-4" routerLink="/" >Clip</a>
 
     <div class="flex flex-grow items-center">
       <ul class="flex flex-row mt-1">
         <li *ngIf="!(authService.isAuth$ | async)">
-          <a class="px-2" href="#" (click)="openModal($event)">Login / Register</a>
+          <a class="px-2" (click)="openModal($event)">Login / Register</a>
         </li>
         <li *ngIf="(authService.isAuth$ | async)">
-          <a class="px-2" routerLink="/manage" routerLinkActive="text-indigo-400"
+          <a class="px-2" routerLink="/manage" routerLinkActive="text-red-400"
           [queryParams]="{sort:'1'}">Manage</a>
         </li>
         <li *ngIf="(authService.isAuth$ | async)">
-          <a class="px-2" routerLink="/upload" routerLinkActive="text-indigo-400" >Upload</a>
+          <a class="px-2" routerLink="/upload" routerLinkActive="text-red-400" >Upload</a>
         </li>
         <li>
-          <a class="px-2" routerLink="/about" routerLinkActive="text-indigo-400">About</a>
+          <a class="px-2" routerLink="/about" routerLinkActive="text-red-400">About</a>
         </li>
         <li *ngIf="authService.isAuth$ | async">
           <a class="px-2" (click)="authService.logout($event)">Logout</a>

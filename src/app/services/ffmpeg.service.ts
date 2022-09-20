@@ -31,7 +31,7 @@ export class FfmpegService {
     this.ffmpeg.FS('writeFile',file.name, data)
 
 
-    const seconds = [1,2,3]
+    const seconds = [1,15,20]
     const commands:string[] = []
 
     seconds.forEach(second=> {
@@ -40,12 +40,12 @@ export class FfmpegService {
         '-i', file.name,
         // output options
         '-ss',
-        `00:00:0${second}`,
+        `00:00:${second}`,
         '-frames:v','1',
         '-filter:v',
         'scale=510:-1',
         // output
-        `output_0${second}.png`
+        `output_${second}.png`
       );
     })
 
@@ -58,7 +58,7 @@ export class FfmpegService {
       seconds.forEach(second=> {
         const screenshotFile = this.ffmpeg.FS(
           'readFile',
-          `output_0${second}.png`
+          `output_${second}.png`
         )
         const screenshotBlob = new Blob(
           [screenshotFile.buffer], {
