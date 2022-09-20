@@ -1,4 +1,3 @@
-import { VideoModule } from './video/video.module';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -40,7 +39,7 @@ import { FbTimestampPipe } from './pipes/fb-timestamp.pipe';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    VideoModule,
+
   ],
   providers: [ModalService],
   bootstrap: [AppComponent],

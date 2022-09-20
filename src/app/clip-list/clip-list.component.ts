@@ -8,19 +8,17 @@ import { Input } from '@angular/core';
   selector: 'app-clip-list',
   templateUrl: './clip-list.component.html',
   styleUrls: ['./clip-list.component.scss'],
-  providers:[DatePipe]
+  providers: [DatePipe],
 })
 export class ClipListComponent implements OnInit, OnDestroy {
-  @Input() scrollable = true
+  @Input() scrollable = true;
 
-  constructor(
-    public clipService: ClipService
-  ) {
-    this.clipService.getClips()
+  constructor(public clipService: ClipService) {
+    this.clipService.getClips();
   }
 
   ngOnInit(): void {
-    if(this.scrollable) {
+    if (this.scrollable) {
       window.addEventListener('scroll', this.handleScroll);
     }
   }
@@ -30,25 +28,22 @@ export class ClipListComponent implements OnInit, OnDestroy {
       window.removeEventListener('scroll', this.handleScroll);
     }
 
-    this.clipService.pageClips = []
-
+    this.clipService.pageClips = [];
   }
 
   handleScroll = () => {
+    const { scrollTop, offsetHeight } = document.documentElement;
+    const { innerHeight } = window;
 
+    const bottomOfWindow =
+      Math.round(scrollTop) + innerHeight === offsetHeight + -1;
 
-    const { scrollTop, offsetHeight } = document.documentElement
-    const { innerHeight } = window
-
-
-    const bottomOfWindow = Math.round(scrollTop) + innerHeight === offsetHeight +-1
-
-
-
-
-    if(bottomOfWindow){
-      this.clipService.getClips()
-
+    if (bottomOfWindow) {
+      this.clipService.getClips();
     }
   };
+
+  scrollTop() {
+    window.scrollTo(0, 100);
+  }
 }
