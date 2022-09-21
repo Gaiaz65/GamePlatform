@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent implements OnInit {
-  @Input() color ='blue'
+  @Input() color ='grey'
 
   get bgColor() {
     return `bg-${this.color}-400`

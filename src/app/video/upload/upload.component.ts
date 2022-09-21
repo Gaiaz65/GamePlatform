@@ -25,7 +25,7 @@ export class UploadComponent implements OnDestroy {
   showPercentage = false;
 
   showAlert = false;
-  alertColor = 'blue';
+  alertColor = 'grey';
   alertMsg = 'Processing the uploading';
   inSubmission = false;
   progress = 0;
@@ -82,7 +82,7 @@ export class UploadComponent implements OnDestroy {
     this.uploadFormular.disable();
 
     this.showAlert = true;
-    this.alertColor = 'blue';
+    this.alertColor = 'grey';
     this.alertMsg = 'Processing the uploading';
     this.inSubmission = true;
     this.showPercentage = true;

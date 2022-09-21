@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   async login() {
     this.showAlert = true
     this.alertMsg = 'Wait a second! Precessing...'
-    this.alertColor = 'blue'
+    this.alertColor = 'grey'
     this.inSubmission = true
 
 

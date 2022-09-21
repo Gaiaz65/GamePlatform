@@ -20,7 +20,7 @@
     class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary flex flex-col justify-start">
 
       <!-- Image -->
-      <a [routerLink]="['/', 'clip', clip.docID]" >
+      <a [routerLink]="['/', 'clip', clip.docID]" class="max-h-52 overflow-hidden" >
         <img class="card-img-top rounded-tl-2xl w-full" [src]="clip.screenshotURL" crossorigin>
       </a>
 

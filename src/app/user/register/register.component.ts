@@ -16,7 +16,7 @@ export class RegisterComponent {
 
   showAlert = false;
   alertMsg = 'Wait a second! Precessing...';
-  alertColor = 'blue';
+  alertColor = 'grey';
   loading = false;
 
   name = new FormControl('', [Validators.required, Validators.minLength(6)]);
@@ -51,7 +51,7 @@ export class RegisterComponent {
   async register() {
     this.showAlert = true;
     this.alertMsg = 'Wait a second! Precessing...';
-    this.alertColor = 'blue';
+    this.alertColor = 'grey';
     this.loading = true;
 
     try {

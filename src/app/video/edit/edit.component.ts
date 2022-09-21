@@ -19,7 +19,7 @@ export class EditComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() activeClip: IClip | null = null
   showAlert = false
-  alertColor = 'blue'
+  alertColor = 'grey'
   alertMsg = 'Updating the clip'
   inSubmission = false;
 
@@ -57,7 +57,7 @@ export class EditComponent implements OnInit, OnDestroy, OnChanges {
     }
       this.showAlert = true;
       this.inSubmission = true;
-      this.alertColor = 'blue';
+      this.alertColor = 'grey';
       this.alertMsg = 'Updating the clip';
 
       try{
